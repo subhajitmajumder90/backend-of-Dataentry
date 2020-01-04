@@ -1,7 +1,11 @@
+const cors=require('cors');
 const mysql= require('mysql');
+const multer= require('multer');
 const express =  require('express');
 const bodyparser =require('body-parser');
-const cors=require('cors');
+
+let upload=multer({dest:"upload/"}) 
+
 
 var app= express();
 app.use(cors());
@@ -55,7 +59,8 @@ app.get('/getuser/:id/:fname', (req, res) => {
 //Insert an employees
 app.post('/Insertdata', (req, res) => {
   console.log(req.body);
-    mysqlcon.query("INSERT INTO `user` ( `fname`, `lname`) VALUES (?,?)",[req.body.fname,req.body.lname], (err, rows, fields) => {
+    mysqlcon.query("INSERT INTO `user` ( `fname`, `lname`) VALUES (?,?)",
+    [req.body.fname,req.body.lname], (err, rows, fields) => {
         if (!err)
             {
                 res.json("inserted");
@@ -83,7 +88,8 @@ app.get('/fetch/:Id', (req,res)=>{
 //update with id wise
 app.post('/update', (req,res)=>{
     console.log(req.body);
-    mysqlcon.query("update user set fname = ?, lname = ? where Id = ?",[req.body.fname,req.body.lname,req.body.Id], (err, rows, fields)=>{
+    mysqlcon.query("update user set fname = ?, lname = ? where Id = ?",
+    [req.body.fname,req.body.lname,req.body.Id], (err, rows, fields)=>{
         if(err){
             res.json("Error");
         }
@@ -124,3 +130,41 @@ console.log(req.body);
 
 
 });
+
+//get state
+app.post('/getstate',(req,res)=>{
+    mysqlcon.query('SELECT * FROM state', (err, rows, fields) => {
+        if (!err){
+            res.json({data:rows, stat:'Success'}).status(200);
+            console.log(rows);
+        }
+        else
+            console.log(err);
+    })
+});
+//get district
+app.get('/getdistrict/:id?',(req,res)=>{
+    if(req.params.id==null){
+        mysqlcon.query('Select * from district',(err,rows,fields)=>{
+            if(!err){
+                res.json({data:rows, stat:'Success'}).status(200);
+                console.log(rows);
+            }
+            else{
+                console.log(err);
+            }
+        })
+    }
+    else{
+        mysqlcon.query('Select * from district where stid=?',[req.params.id], (err,rows,fields)=>{
+            if(!err){
+                res.json({data:rows, stat:'Success'}).status(200);
+                console.log(rows);
+            }
+            else{
+                console.log(err);
+            }
+        })
+    }
+   
+})
