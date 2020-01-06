@@ -1,15 +1,25 @@
 const cors=require('cors');
 const mysql= require('mysql');
-const multer= require('multer');
+
 const express =  require('express');
 const bodyparser =require('body-parser');
-
-let upload=multer({dest:"upload/"}) 
+const fileupload= require('express-fileupload')
+/*var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, '/upload')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+  })
+  
+  var upload = multer({ storage: storage }).single('file');*/
 
 
 var app= express();
 app.use(cors());
 app.use(bodyparser.json());
+app.use(fileupload());
 
 
 var mysqlcon=mysql.createConnection({
@@ -167,4 +177,20 @@ app.get('/getdistrict/:id?',(req,res)=>{
         })
     }
    
+})
+
+//file upload using express-fileupload npm
+app.post("/fileupload",(req,res)=>{
+    console.log(req.files)
+    let myfile= req.files.sampleFile;
+    console.log(myfile)
+    myfile.mv("upload/"+211+myfile.name, (err)=>{
+        if(err){
+            res.json(err);
+        }
+        else{
+           
+            res.json("success");
+        }
+    })
 })
