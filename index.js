@@ -179,18 +179,25 @@ app.get('/getdistrict/:id?',(req,res)=>{
    
 })
 
+
 //file upload using express-fileupload npm
 app.post("/fileupload",(req,res)=>{
-    console.log(req.files)
     let myfile= req.files.sampleFile;
-    console.log(myfile)
-    myfile.mv("upload/"+211+myfile.name, (err)=>{
+    tfile="upload/"+myfile.name;
+    myfile.mv(tfile, (err)=>{
         if(err){
             res.json(err);
         }
         else{
-           
-            res.json("success");
+            mysqlcon.query("INSERT INTO `user` (`image`) VALUES (?)",[tfile],(errr)=>{
+                if(errr){
+                    res.json(errr);
+                }
+                else{
+                    res.json("success");
+                }
+            });
+            
         }
     })
 })
