@@ -182,8 +182,12 @@ app.get('/getdistrict/:id?',(req,res)=>{
 
 //file upload using express-fileupload npm
 app.post("/fileupload",(req,res)=>{
+    //
+    let time=new Date;
+    time=time.getFullYear()+"_"+(time.getMonth()+1)+"_"+time.getDate()+"_"+time.getHours()+"_"+time.getMinutes()+"_"+time.getSeconds()+"_"+time.getMilliseconds();
+    
     let myfile= req.files.sampleFile;
-    tfile="upload/"+myfile.name;
+    tfile="upload/"+Math.floor(Math.random() * 9999)+"_"+time+"_"+myfile.name;
     myfile.mv(tfile, (err)=>{
         if(err){
             res.json(err);
