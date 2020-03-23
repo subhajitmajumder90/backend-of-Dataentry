@@ -4,16 +4,7 @@ const mysql= require('mysql');
 const express =  require('express');
 const bodyparser =require('body-parser');
 const fileupload= require('express-fileupload')
-/*var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, '/upload')
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now())
-    }
-  })
-  
-  var upload = multer({ storage: storage }).single('file');*/
+
 
 
 var app= express();
